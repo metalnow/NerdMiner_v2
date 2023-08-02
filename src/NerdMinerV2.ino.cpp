@@ -16,7 +16,7 @@
 #include "mining.h"
 #include "monitor.h"
 
-#define CURRENT_VERSION "V1.5.2"
+#define CURRENT_VERSION "V0.0.1"
 
 //3 seconds WDT
 #define WDT_TIMEOUT 3
@@ -43,8 +43,8 @@ void alternate_screen_state() {
 }
 
 void alternate_screen_rotation() {
-  tft.getRotation() == 1 ? tft.setRotation(3) : tft.setRotation(1);
-
+  //tft.getRotation() == 1 ? tft.setRotation(3) : tft.setRotation(1);
+  tft.setRotation((tft.getRotation()+1) % 4);
 }
 
 
@@ -84,9 +84,9 @@ void setup()
 
   /******** INIT DISPLAY ************/
   tft.init();
-  tft.setRotation(1);
+  tft.setRotation(2);
   tft.setSwapBytes(true);// Swap the colour byte order when rendering
-  background.createSprite(initWidth,initHeight); //Background Sprite
+  background.createSprite(screenWidth, screenHeight); //Background Sprite
   background.setSwapBytes(true);
   render.setDrawer(background); // Link drawing object to background instance (so font will be rendered on background)
   render.setLineSpaceRatio(0.9); //Espaciado entre texto
@@ -100,9 +100,9 @@ void setup()
   
   /******** PRINT INIT SCREEN *****/
   tft.fillScreen(TFT_BLACK);
-  tft.pushImage(0, 0, initWidth, initHeight, initScreen);
+  tft.pushImage(0, 0, screenWidth, screenHeight, initScreen);
   tft.setTextColor(TFT_BLACK);
-  tft.drawString(CURRENT_VERSION, 24, 130, FONT2);
+  tft.drawString(CURRENT_VERSION, 24, 100, FONT2);
   delay(2000);
 
   /******** INIT WIFI ************/

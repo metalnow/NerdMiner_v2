@@ -11,6 +11,7 @@
 #include "media/images.h"
 #include <TFT_eSPI.h> // Graphics and font library
 #include "wManager.h"
+#include "media/Free_Fonts.h"
 
 // JSON configuration file
 #define JSON_CONFIG_FILE "/config.json"
@@ -150,7 +151,7 @@ void init_WifiManager()
   if(!digitalRead(PIN_BUTTON_2)){
     forceConfig = true;
     wm.setBreakAfterConfig(true); //Set to detect config edition and save
- }
+  }
   bool spiffsSetup = loadConfigFile();
   if (!spiffsSetup)
   {
@@ -215,7 +216,11 @@ void init_WifiManager()
   {
     //No configuramos timeout al modulo
     wm.setConfigPortalBlocking(true); //Hacemos que el portal SI bloquee el firmware
-    tft.pushImage(0, 0, setupModeWidth, setupModeHeight, setupModeScreen);
+    tft.pushImage(0, 0, screenWidth, screenHeight, setupModeScreen);
+    tft.setTextColor(TFT_BLACK);
+    tft.drawString("AP: NerdMinerAP", 10, 1, FONT2);
+    tft.drawString("PW: MineYourCoins", 5, 110, FONT2);
+
     if (!wm.startConfigPortal("NerdMinerAP","MineYourCoins"))
     {
       Serial.println("failed to connect and hit timeout");

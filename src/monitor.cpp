@@ -221,7 +221,7 @@ void changeScreen(void){
 void show_MinerScreen(unsigned long mElapsed){
 
     //Print background screen
-    background.pushImage(0, 0, MinerWidth, MinerHeight, MinerScreen); 
+    background.pushImage(0, 0, screenWidth, screenHeight, MinerScreen); 
 
     char CurrentHashrate[10] = {0};
     sprintf(CurrentHashrate, "%.2f", (1.0*(elapsedKHs*1000))/mElapsed);
@@ -231,6 +231,18 @@ void show_MinerScreen(unsigned long mElapsed){
      Serial.printf(">>> Completed %d share(s), %d Khashes, avg. hashrate %s KH/s\n",
       shares, totalKHashes, CurrentHashrate);
 
+    //Hashrate
+    render.setFontSize(64);
+    render.setCursor(0, 0);
+    render.setFontColor(TFT_BLACK);
+    
+    render.drawString(CurrentHashrate, 10, 16, TFT_DARKGREY);
+
+    //Valid Blocks
+    render.setFontSize(44);
+    render.drawString(String(valids).c_str(), 15, 92, TFT_BLACK);
+    
+    /*
     //Hashrate
     render.setFontSize(70);
     render.setCursor(19, 118);
@@ -276,6 +288,7 @@ void show_MinerScreen(unsigned long mElapsed){
     //Print Hour
     render.setFontSize(20);
     render.rdrawString(getTime().c_str(), 286, 1, TFT_BLACK);
+    */
 
     // pool url
     /*background.setTextSize(1);
@@ -287,7 +300,7 @@ void show_MinerScreen(unsigned long mElapsed){
     background.pushSprite(0,0);
 }
 
-
+/*
 void show_ClockScreen(unsigned long mElapsed){
 
     //Print background screen
@@ -408,3 +421,4 @@ void show_GlobalHashScreen(unsigned long mElapsed){
     //Push prepared background to screen
     background.pushSprite(0,0);
 }
+*/
