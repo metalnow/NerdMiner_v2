@@ -102,7 +102,7 @@ void setup()
   tft.fillScreen(TFT_BLACK);
   tft.pushImage(0, 0, screenWidth, screenHeight, initScreen);
   tft.setTextColor(TFT_BLACK);
-  tft.drawString(CURRENT_VERSION, 24, 100, FONT2);
+  tft.drawString(CURRENT_VERSION, 2, 100, FONT2);
   delay(2000);
 
   /******** INIT WIFI ************/

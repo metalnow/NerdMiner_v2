@@ -215,9 +215,10 @@ String getTime(void){
 }
 
 void changeScreen(void){
-    mMonitor.screen++;
-    if(mMonitor.screen> SCREEN_GLOBAL) mMonitor.screen = SCREEN_MINING;
+    // mMonitor.screen++;
+    // if(mMonitor.screen> SCREEN_GLOBAL) mMonitor.screen = SCREEN_MINING;
 }
+
 void show_MinerScreen(unsigned long mElapsed){
 
     //Print background screen
