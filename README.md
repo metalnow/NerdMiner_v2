@@ -37,16 +37,7 @@ Every time an stratum job notification is received miner update its current work
 - 3D BOX
 
 ### Flash firmware
-#### developer build
-Complicated way to flash firmware. Build your own miner using the developer tool:
-
-1. Get a LilyGO T-QT
-1. Download this repository
-1. Install visual studio classic and platform.io plugin
-1. Plug your board
-1. Build and Upload 
-
-#### Standard tool [untest]
+#### Standard tool [tested]
 Create your own miner using the online firwmare flash tool **ESPtool** and the **binary files** that you will find in the src/bin folder.
 If you want you can compile the entire project using Arduino, PlatformIO or Expressif IDF.
 
@@ -55,6 +46,9 @@ If you want you can compile the entire project using Arduino, PlatformIO or Expr
 1. Go to ESPtool online: https://espressif.github.io/esptool-js/
 1. Load the firmware with the binaries from the src/bin folder.
 1. Plug your board and select each file from src/bin with its address 
+1. Quick way, set flash address 0x10000 and select firmware.bin file ![image](images/exp_tool_online_simple.png)
+1. Hard way ![image](images/exp_tool_online_hard.png)
+1. Disconnect your board and re-plug
 
 #### Standard tool [untest]
 Run bat file in windows.
@@ -64,6 +58,14 @@ Run bat file in windows.
 1. Goto bin folder
 1. Run 'flash to device.bat'
 
+#### developer build
+Complicated way to flash firmware. Build your own miner using the developer tool:
+
+1. Get a LilyGO T-QT
+1. Download this repository
+1. Install visual studio classic and platform.io plugin
+1. Plug your board
+1. Build and Upload 
 
 ### Update firmware
 Update NerdMiner firmware following same flashing steps but only adding 0x10000_firmware file.
