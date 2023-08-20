@@ -214,9 +214,31 @@ String getTime(void){
   return LocalHour;
 }
 
+void getTime(unsigned long* currentHours, unsigned long* currentMinutes, unsigned long* currentSeconds){
+  
+  //Check if need an NTP call to check current time
+  if((mTriggerUpdate == 0) || (millis() - mTriggerUpdate > UPDATE_PERIOD_h * 60 * 60 * 1000)){ //60 sec. * 60 min * 1000ms
+    if(WiFi.status() == WL_CONNECTED) {
+        timeClient.update(); //NTP call to get current time
+        mTriggerUpdate = millis();
+        initialTime = timeClient.getEpochTime(); // Guarda la hora inicial (en segundos desde 1970)
+        Serial.print("TimeClient NTPupdateTime ");
+    }
+  }
+
+  unsigned long elapsedTime = (millis() - mTriggerUpdate) / 1000; // Tiempo transcurrido en segundos
+  unsigned long currentTime = initialTime + elapsedTime; // La hora actual
+
+  // convierte la hora actual en horas, minutos y segundos
+  *currentHours = currentTime % 86400 / 3600;
+  *currentMinutes = currentTime % 3600 / 60;
+  *currentSeconds = currentTime % 60;
+
+}
+
 void changeScreen(void){
-    // mMonitor.screen++;
-    // if(mMonitor.screen> SCREEN_GLOBAL) mMonitor.screen = SCREEN_MINING;
+    mMonitor.screen++;
+    if(mMonitor.screen> SCREEN_CLOCK) mMonitor.screen = SCREEN_MINING;
 }
 
 void show_MinerScreen(unsigned long mElapsed){
@@ -235,14 +257,28 @@ void show_MinerScreen(unsigned long mElapsed){
     //Hashrate
     render.setFontSize(64);
     render.setCursor(0, 0);
-    render.setFontColor(TFT_BLACK);
-    
-    render.drawString(CurrentHashrate, 10, 16, TFT_DARKGREY);
+    render.setFontColor(TFT_BLACK);    
+    render.rdrawString(CurrentHashrate, 114, 24, TFT_DARKGREY);
 
     //Valid Blocks
     render.setFontSize(44);
     render.drawString(String(valids).c_str(), 15, 92, TFT_BLACK);
     
+    //Mining Time
+    char timeMining[15]; 
+    unsigned long secElapsed = millis() / 1000;
+    int days = secElapsed / 86400; 
+    int hours = (secElapsed - (days * 86400)) / 3600;                                                        //Number of seconds in an hour
+    int mins = (secElapsed - (days * 86400) - (hours * 3600)) / 60;                                              //Remove the number of hours and calculate the minutes.
+    int secs = secElapsed - (days * 86400) - (hours * 3600) - (mins * 60);   
+    sprintf(timeMining, "%01d  %02d:%02d:%02d", days, hours, mins, secs);
+    render.setFontSize(20);
+    render.setCursor(0, 10);        
+    render.rdrawString(String(timeMining).c_str(), 124, 0, TFT_BLACK);
+
+    // background.setTextColor(TFT_DARKGREY, TFT_WHITE);
+    // background.drawChar('d', 52, 0, 2);    
+
     /*
     //Hashrate
     render.setFontSize(70);
@@ -301,11 +337,12 @@ void show_MinerScreen(unsigned long mElapsed){
     background.pushSprite(0,0);
 }
 
-/*
+uint16_t osx=64, osy=64, omx=64, omy=64, ohx=64, ohy=64;  // Saved H, M, S x & y coords
+
 void show_ClockScreen(unsigned long mElapsed){
 
     //Print background screen
-    background.pushImage(0, 0, minerClockWidth, minerClockHeight, minerClockScreen); 
+    background.pushImage(0, 0, screenWidth, screenHeight, ClockScreen); 
 
     char CurrentHashrate[10] = {0};
     sprintf(CurrentHashrate, "%.2f", (1.0*(elapsedKHs*1000))/mElapsed);
@@ -315,41 +352,107 @@ void show_ClockScreen(unsigned long mElapsed){
      Serial.printf(">>> Completed %d share(s), %d Khashes, avg. hashrate %s KH/s\n",
       shares, totalKHashes, CurrentHashrate);
 
+    // //Hashrate
+    // render.setFontSize(50);
+    // render.setCursor(19, 122);
+    // render.setFontColor(TFT_BLACK);
+    
+    // render.rdrawString(CurrentHashrate, 94, 129, TFT_BLACK);
+
+    // //Print BTC Price
+    // //render.setFontSize(22);
+    // //render.drawString(getBTCprice().c_str(), 202, 3, TFT_BLACK);
+    // background.setFreeFont(FSSB9);
+    // background.setTextSize(1);
+    // background.setTextDatum(TL_DATUM);
+    // background.setTextColor(TFT_BLACK);
+    // background.drawString(getBTCprice().c_str(), 202, 3, GFXFF);
+
+    // //Print BlockHeight
+    // render.setFontSize(36);
+    // render.rdrawString(getBlockHeight().c_str(), 254, 140, TFT_BLACK);
+
+    // //Print Hour
+    // background.setFreeFont(FF23);
+    // background.setTextSize(2);
+    // background.setTextColor(0xDEDB, TFT_BLACK);
+
+    render.setCursor(0, 0);
+    //Valid Blocks
+    render.setFontSize(30);
+    render.rdrawString(String(valids).c_str(), 96, 54, TFT_BLACK);
+
     //Hashrate
-    render.setFontSize(50);
-    render.setCursor(19, 122);
-    render.setFontColor(TFT_BLACK);
-    
-    render.rdrawString(CurrentHashrate, 94, 129, TFT_BLACK);
-
-    //Print BTC Price
-    //render.setFontSize(22);
-    //render.drawString(getBTCprice().c_str(), 202, 3, TFT_BLACK);
-    background.setFreeFont(FSSB9);
-    background.setTextSize(1);
-    background.setTextDatum(TL_DATUM);
-    background.setTextColor(TFT_BLACK);
-    background.drawString(getBTCprice().c_str(), 202, 3, GFXFF);
-
-    //Print BlockHeight
     render.setFontSize(36);
-    render.rdrawString(getBlockHeight().c_str(), 254, 140, TFT_BLACK);
+    render.setFontColor(TFT_BLACK);    
+    render.cdrawString(CurrentHashrate, 64, 74, TFT_DARKGREY);
 
-    //Print Hour
-    background.setFreeFont(FF23);
-    background.setTextSize(2);
-    background.setTextColor(0xDEDB, TFT_BLACK);
+    unsigned long currentHours;
+    unsigned long currentMinutes;
+    unsigned long currentSeconds;
+    getTime(&currentHours, &currentMinutes, &currentSeconds);
+
+    if (currentHours > 12)
+        currentHours -= 12;
+    float sdeg = currentSeconds*6;                  // 0-59 -> 0-354
+    float mdeg = currentMinutes*6+sdeg*0.01666667;  // 0-59 -> 0-360 - includes seconds
+    float hdeg = currentHours*30+mdeg*0.0833333;  // 0-11 -> 0-360 - includes minutes and seconds
+
+    // Serial.printf("*** sdeg %.2f, mdeg %.2f, hdeg %.2f\n",
+    //   sdeg, mdeg, hdeg);
+
+    float hx = cos((hdeg-90)*0.0174532925);    
+    float hy = sin((hdeg-90)*0.0174532925);
+    float mx = cos((mdeg-90)*0.0174532925);    
+    float my = sin((mdeg-90)*0.0174532925);
+    float sx = cos((sdeg-90)*0.0174532925);    
+    float sy = sin((sdeg-90)*0.0174532925);    
+
+    // if (currentSeconds==0) {
+    //     // Erase hour and minute hand positions every minute
+    //     background.drawLine(ohx, ohy, 65, 65, TFT_BLACK);
+    //     ohx = hx*33+60;    
+    //     ohy = hy*33+60;
+    //     background.drawLine(omx, omy, 65, 65, TFT_BLACK);
+    //     omx = mx*44+60;    
+    //     omy = my*44+60;
+    // }
+
+    ohx = hx*33+60;    
+    ohy = hy*33+60;
+    omx = mx*44+60;    
+    omy = my*44+60;    
+    // Redraw new hand positions, hour and minute hands not erased here to avoid flicker
+    background.drawLine(ohx, ohy, 65, 65, TFT_BLACK);
+    background.drawLine(omx, omy, 65, 65, TFT_BLACK);
+    osx = sx*47+60;    
+    osy = sy*47+60;
+    background.drawLine(osx, osy, 65, 65, TFT_RED);   
+
+    background.fillCircle(65, 65, 3, TFT_RED);
+    // lv_img_set_angle(
+    //     hour_img, ((timeinfo.tm_hour) * 300 + ((timeinfo.tm_min) * 5)) % 3600);
+    // lv_img_set_angle(min_img, (timeinfo.tm_min) * 60);
+
+    // lv_anim_t a;
+    // lv_anim_init(&a);
+    // lv_anim_set_var(&a, sec_img);
+    // lv_anim_set_exec_cb(&a, (lv_anim_exec_xcb_t)lv_img_set_angle);
+    // lv_anim_set_values(&a, (timeinfo.tm_sec * 60) % 3600,
+    //                    (timeinfo.tm_sec + 1) * 60);
+    // lv_anim_set_time(&a, 1000);
+    // lv_anim_start(&a);    
     
-    //background.setTexSize(2);
-    background.drawString(getTime().c_str(), 130, 50, GFXFF);
-    //render.setFontColor(TFT_WHITE);
-    //render.setFontSize(110);
-    //render.rdrawString(getTime().c_str(), 290, 40, TFT_WHITE);
+    // //background.setTexSize(2);
+    // background.drawString(getTime().c_str(), 130, 50, GFXFF);
+    // //render.setFontColor(TFT_WHITE);
+    // //render.setFontSize(110);
+    // //render.rdrawString(getTime().c_str(), 290, 40, TFT_WHITE);
 
     //Push prepared background to screen
     background.pushSprite(0,0);
 }
-
+/*
 void show_GlobalHashScreen(unsigned long mElapsed){
 
     //Print background screen

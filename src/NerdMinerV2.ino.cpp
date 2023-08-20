@@ -16,7 +16,7 @@
 #include "mining.h"
 #include "monitor.h"
 
-#define CURRENT_VERSION "V0.0.1"
+#define CURRENT_VERSION "V1.6.0"
 
 //3 seconds WDT
 #define WDT_TIMEOUT 3
@@ -101,7 +101,7 @@ void setup()
   /******** PRINT INIT SCREEN *****/
   tft.fillScreen(TFT_BLACK);
   tft.pushImage(0, 0, screenWidth, screenHeight, initScreen);
-  tft.setTextColor(TFT_BLACK);
+  tft.setTextColor(TFT_GOLD);
   tft.drawString(CURRENT_VERSION, 2, 100, FONT2);
   delay(2000);
 

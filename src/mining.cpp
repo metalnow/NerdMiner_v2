@@ -357,12 +357,11 @@ void runMonitor(void *name){
     elapsedKHs = currentKHashes - totalKHashes; 
     totalKHashes = currentKHashes;
     
-    // switch(mMonitor.screen){
-    //   case SCREEN_MINING: show_MinerScreen(mElapsed); break;
-    //   case SCREEN_CLOCK: show_ClockScreen(mElapsed); break;
-    //   case SCREEN_GLOBAL: show_GlobalHashScreen(mElapsed); break;
-    // }
-    show_MinerScreen(mElapsed);
+    switch(mMonitor.screen){
+      case SCREEN_MINING: show_MinerScreen(mElapsed); break;
+      case SCREEN_CLOCK: show_ClockScreen(mElapsed); break;
+      // case SCREEN_GLOBAL: show_GlobalHashScreen(mElapsed); break;
+    }
     
     //Monitor state when hashrate is 0.0
     if(elapsedKHs == 0) {
