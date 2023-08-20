@@ -7,11 +7,12 @@ The main aim of this project is to let you **learn more about minery** and to ha
 
 
 Original project https://github.com/valerio-vaccaro/HAN
+Branched project & modified from https://github.com/BitMaker-hub/NerdMiner_v2
 
-![image](images/NerdMinerv2.jpg)
+![image](images/NerdMinerv2_mini.jpg)
 
 ## Requirements
-- TTGO T-Display S3
+- LilyGO T-QT [link](https://github.com/Xinyuan-LilyGO/T-QT)
 - 3D BOX [here](3d_files/)
 
 ### Project description
@@ -20,9 +21,8 @@ Original project https://github.com/valerio-vaccaro/HAN
 This project is using ESP32-S3, uses WifiManager to modify miner settings and save them to SPIFF.
 The microMiner comes with several screens to monitor it's working procedure and also to show you network mining stats.
 Currently includes:
-- NerdMiner Screen > Mining data of Nerdminer
-- ClockMiner Screen > Fashion style clock miner
-- GlobalStats Screen > Global minery stats and relevant data
+- Mining Screen > Mining data of Nerdminer
+- Clock Screen > Fashion style clock miner
 
 This miner is multicore and multithreads, one thread is used to mine and other is implementing stratum work and wifi stuff. 
 Every time an stratum job notification is received miner update its current work to not create stale shares. 
@@ -33,25 +33,37 @@ Every time an stratum job notification is received miner update its current work
 
 ## Build Tutorial
 ### Hardware requirements
-- TTGO T-Display S3 > Buy it on aliexpress or amazon
+- LilyGO T-QT > Buy it on aliexpress or amazon
 - 3D BOX
 
 ### Flash firmware
-#### microMiners Flashtool [Recommended]
-Easyiest way to flash firmware. Build your own miner using the folowing firwmare flash tool:
+#### developer build
+Complicated way to flash firmware. Build your own miner using the developer tool:
 
-1. Get a TTGO T-display S3
-1. Go to NM2 flasher online: https://bitmaker-hub.github.io/diyflasher/
+1. Get a LilyGO T-QT
+1. Download this repository
+1. Install visual studio classic and platform.io plugin
+1. Plug your board
+1. Build and Upload 
 
-#### Standard tool
+#### Standard tool [untest]
 Create your own miner using the online firwmare flash tool **ESPtool** and the **binary files** that you will find in the src/bin folder.
 If you want you can compile the entire project using Arduino, PlatformIO or Expressif IDF.
 
-1. Get a TTGO T-display S3
+1. Get a LilyGO T-QT
 1. Download this repository
 1. Go to ESPtool online: https://espressif.github.io/esptool-js/
 1. Load the firmware with the binaries from the src/bin folder.
 1. Plug your board and select each file from src/bin with its address 
+
+#### Standard tool [untest]
+Run bat file in windows.
+
+1. Get a LilyGO T-QT
+1. Download this repository
+1. Goto bin folder
+1. Run 'flash to device.bat'
+
 
 ### Update firmware
 Update NerdMiner firmware following same flashing steps but only adding 0x10000_firmware file.
@@ -112,16 +124,6 @@ With the USB-C port to the right:
 - All libraries needed shown on platform.ini
 
 ### On process
-- [x]  Move project to platformIO
-- [x]  Bug rectangle on screen when 1milion shares
-- [x]  Bug memory leaks
-- [x]  Bug Reboots when received JSON contains some null values
-- [x]  Implement midstate sha256
-- [x]  Bug Wificlient DNS unresolved on Wifi.h
-- [x]  Code refactoring
-- [x]  Add blockHeight to screen
-- [x]  Add clock to show current time
-- [x]  Add new screen with global mining stats
 - [ ]  Add support to control BM1397
 
 ### Donations/Project contributions
