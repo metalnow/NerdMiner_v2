@@ -1,7 +1,7 @@
 .pio
 .vscode
 NerdMinerLog.txt
-bin/0x10000_firmware.bin
+# bin/0x10000_firmware.bin
 logs
 
 *.DS_Store
@@ -42,7 +42,7 @@ test*
 *.dylib
 
 # Executables
-*.exe
+# *.exe
 *.out
 *.app
 *.i*86
