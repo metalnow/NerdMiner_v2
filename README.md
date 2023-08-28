@@ -7,6 +7,7 @@ The main aim of this project is to let you **learn more about minery** and to ha
 
 
 Original project https://github.com/valerio-vaccaro/HAN
+
 Branched project & modified from https://github.com/BitMaker-hub/NerdMiner_v2
 
 ![image](images/NerdMinerv2_mini.jpg)
