@@ -16,15 +16,15 @@ Branched project & modified from https://github.com/BitMaker-hub/NerdMiner_v2
 - 3D BOX [here](3d_files/)
 
 ### Project description
-**ESP32 implementing Stratum protocol** to mine on solo pool. Pool can be changed but originally works with ckpool.
+**ESP32 implementing Stratum protocol** to mine on solo pool. Pool can be changed but originally works with Public-pool.io (where Nerdminers are supported).
 
-This project is using ESP32-S3, uses WifiManager to modify miner settings and save them to SPIFF.
+This project was initialy developed using ESP32-S3, but currently support other boards. It uses WifiManager to modify miner settings and save them to SPIFF.
 The microMiner comes with several screens to monitor it's working procedure and also to show you network mining stats.
 Currently includes:
 - Mining Screen > Mining data of Nerdminer
 - Clock Screen > Fashion style clock miner
 
-This miner is multicore and multithreads, one thread is used to mine and other is implementing stratum work and wifi stuff. 
+This miner is multicore and multithreads, both cores are used to mine and several threads are used to implementing stratum work and wifi stuff. 
 Every time an stratum job notification is received miner update its current work to not create stale shares. 
 
 **IMPORTANT** Miner is not seen by all standard pools due to its low share difficulty. You can check miner work remotely using specific pools specified down or seeing logs via UART.
@@ -75,6 +75,7 @@ Update NerdMiner firmware following same flashing steps but only adding 0x10000_
 1. ESPtool recommendations: use 115200bps
 1. Build errors > If during firmware download upload stops, it's recommended to enter the board in boot mode. Unplug cable, hold right bottom button and then plug cable. Try programming
 1. In extreme case you can "Erase all flash" on ESPtool to clean all current configuration before uploading firmware. There has been cases that experimented Wifi failures until this was made. 
+1. In case of ESP32-WROOM Boards, could be necessary to put your board on boot mode. Hold boot button, press reset button and then program.
 
 ### NerdMiner configuration
 After programming, you will only need to setup your Wifi and BTC address.
@@ -122,11 +123,31 @@ With the USB-C port to the right:
 ## Developers
 ### Project guidelines
 - Current project was addapted to work with PlatformIO
-- Current project works with ESP32-S3 but any ESP32 can be used.
+- Current project works with ESP32-S3 and ESP32-wroom.
 - Partition squeme should be build as huge app
 - All libraries needed shown on platform.ini
 
+### Job done
+- [x]  Move project to platformIO
+- [x]  Bug rectangle on screen when 1milion shares
+- [x]  Bug memory leaks
+- [x]  Bug Reboots when received JSON contains some null values
+- [x]  Implement midstate sha256
+- [x]  Bug Wificlient DNS unresolved on Wifi.h
+- [x]  Code refactoring
+- [x]  Add blockHeight to screen
+- [x]  Add clock to show current time
+- [x]  Add new screen with global mining stats
+- [x]  Add pool support for low difficulty miners
+- [x]  Add best difficulty on miner screen
+- [x]  Add suport to standard ESP32 dev-kit / ESP32-WROOM
+
 ### On process
+- [ ]  Code changes to support adding multiple boards
+- [ ]  Create a daisy chain protocol via UART or I2C to support ESP32 hashboards
+- [ ]  Add support to TTGO T-display 1.14
+- [ ]  Add support to Amoled
+- [ ]  Create new screen like clockMiner but with BTC price
 - [ ]  Add support to control BM1397
 
 ### Donations/Project contributions

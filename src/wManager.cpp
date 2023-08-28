@@ -12,6 +12,7 @@
 #include <TFT_eSPI.h> // Graphics and font library
 #include "wManager.h"
 #include "media/Free_Fonts.h"
+#include "monitor.h"
 
 // JSON configuration file
 #define JSON_CONFIG_FILE "/config.json"
@@ -20,7 +21,7 @@
 bool shouldSaveConfig = false;
 
 // Variables to hold data from custom textboxes
-char poolString[80] = "public-pool.airdns.org";
+char poolString[80] = "public-pool.io";
 int portNumber = 21496;//3333;
 char btcString[80] = "yourBtcAddress";
 int GMTzone = 2; //Currently selected in spain
@@ -31,6 +32,7 @@ WiFiManager wm;
 
 
 extern TFT_eSPI tft;  // tft variable declared on main
+extern monitor_data mMonitor;
 
 void saveConfigFile()
 // Save Config in JSON format
@@ -147,11 +149,16 @@ void init_WifiManager()
 
   // Change to true when testing to force configuration every time we run
   bool forceConfig = false;
+
+  #if !defined(DEVKITV1)
   // Check if button2 is pressed to enter configMode with actual configuration
   if(!digitalRead(PIN_BUTTON_2)){
+    Serial.println(F("Button pressed to force start config mode"));
     forceConfig = true;
     wm.setBreakAfterConfig(true); //Set to detect config edition and save
   }
+  #endif
+  
   bool spiffsSetup = loadConfigFile();
   if (!spiffsSetup)
   {
@@ -239,6 +246,7 @@ void init_WifiManager()
   else
   {
     //Tratamos de conectar con la configuración inicial ya almacenada
+    mMonitor.NerdStatus = NM_Connecting;
     wm.setCaptivePortalEnable(false); // disable captive portal redirection
     if (!wm.autoConnect("NerdMinerAP","MineYourCoins"))
     {
@@ -249,6 +257,8 @@ void init_WifiManager()
       //delay(5000);
     }
   }
+
+  mMonitor.NerdStatus = NM_Connecting;
 
   //Conectado a la red Wifi
   if(WiFi.status() == WL_CONNECTED){
